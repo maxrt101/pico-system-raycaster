@@ -8,7 +8,8 @@
 namespace ui {
 
 struct View {
-  bool activated = true;
+  bool activated                    = true;
+  bool ignore_inputs_for_next_frame = true;
 
   virtual ~View() = default;
 
@@ -45,7 +46,11 @@ struct ViewStack {
   void update(uint32_t tick) {
     for (auto & [name, view] : views) {
       if (view->activated) {
-        view->update(tick);
+        if (!view->ignore_inputs_for_next_frame) {
+          view->update(tick);
+        } else {
+          view->ignore_inputs_for_next_frame = false;
+        }
       }
     }
   }

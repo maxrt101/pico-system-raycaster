@@ -41,12 +41,14 @@ set(PROJECT_SOURCES
     ${PROJECT_PATH}/src/raycaster/player.h
     ${PROJECT_PATH}/src/raycaster/option.h
     ${PROJECT_PATH}/src/raycaster/state.h
+    ${PROJECT_PATH}/src/raycaster/resources.h
     ${PROJECT_PATH}/src/raycaster/raycaster.h
     ${PROJECT_PATH}/src/raycaster/views/main_menu.h
     ${PROJECT_PATH}/src/raycaster/views/options.h
     ${PROJECT_PATH}/src/raycaster/views/renderer.h
     ${PROJECT_PATH}/src/raycaster/views/map_edit.h
     ${PROJECT_PATH}/src/main.cc
+    ${PROJECT_PATH}/src/assets/wolf3d_walls_spritesheet_16x16.h
 )
 
 # Create the output target
@@ -64,6 +66,6 @@ target_link_options(${PROJECT_NAME}
 pixel_double(${PROJECT_NAME})          # 120x120 resolution game, pixel-doubled to 240x240
 disable_startup_logo(${PROJECT_NAME})  # Skip the PicoSystem splash
 #no_font(${PROJECT_NAME})              # Omit the default font
-#no_spritesheet(${PROJECT_NAME})       # Omit the default spritesheet
+no_spritesheet(${PROJECT_NAME})       # Omit the default spritesheet
 #no_overclock(${PROJECT_NAME})         # Don't overclock
 

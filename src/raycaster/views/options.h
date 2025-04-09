@@ -16,22 +16,15 @@ struct Options : ui::View {
     picosystem::color_t on       = picosystem::rgb(0x8, 0xF, 0x8);
   } colors;
 
-  bool ignore_inputs = true;
-
   Options() {}
   ~Options() override = default;
 
   void init() {
-    ignore_inputs = true;
+    ignore_inputs_for_next_frame = true;
   }
 
   void update(uint32_t tick) {
     using namespace picosystem;
-
-    if (ignore_inputs) {
-      ignore_inputs = false;
-      return;
-    }
 
     if (pressed(A)) {
       events::publish("options_exit");

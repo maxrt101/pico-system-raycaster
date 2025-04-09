@@ -9,24 +9,17 @@ namespace views {
 struct MapEdit : ui::View {
   Vec2<int32_t> pos;
 
-  bool ignore_inputs = true;
-
   MapEdit() {}
   ~MapEdit() override = default;
 
   void init() {
     pos = {0, 0};
-    ignore_inputs = true;
+    ignore_inputs_for_next_frame = true;
   }
 
   void update(uint32_t tick) {
     using namespace picosystem;
     using namespace util;
-
-    if (ignore_inputs) {
-      ignore_inputs = false;
-      return;
-    }
 
     if (pressed(A)) {
       events::publish("map_edit_exit");

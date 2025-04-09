@@ -13,7 +13,12 @@ struct Map {
   struct Tile {
     uint8_t type;
 
+    Tile() : type(TILE_EMPTY) {}
     Tile(uint8_t type) : type(type) {}
+
+    bool isSolid() const {
+      return type != TILE_EMPTY;
+    }
   };
 
   int32_t side_size = 0;

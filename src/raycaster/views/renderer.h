@@ -2,9 +2,12 @@
 
 #include "util/util.h"
 #include "raycaster/state.h"
+#include "raycaster/resources.h"
 #include <cmath>
 
 #define MAP_TILE_SCALE          (SCREEN_SIZE / MAP_SIZE)
+#define USE_SHADED_WALL         0
+#define USE_CAP_CEILING         0
 #define USE_SAMPLE_MAP          1
 #define USE_2D_MAP_RENDER       1
 #define MAP_RENDER_SCALE        1
@@ -30,11 +33,11 @@ struct Renderer : ui::View {
     TileHit tile;
   };
   
-  float fov   = 3.14159f / 4.0f;
+  float fov   = 3.14159f / 6.0f;
   float depth = 30.0f;
   float step  = 0.01f;
 
-  bool ignore_inputs = true;
+  SpritesheetKind spritesheet_kind = SpritesheetKind::WOLF3D;
 
   Renderer() {}
   ~Renderer() override = default;
@@ -42,16 +45,11 @@ struct Renderer : ui::View {
   void init() {
     State::player.position.x = State::map.size() / 2;
     State::player.position.y = State::map.size() / 2;
-    ignore_inputs = true;
+    ignore_inputs_for_next_frame = true;
   }
 
   void update(uint32_t tick) {
     using namespace picosystem;
-
-    if (ignore_inputs) {
-      ignore_inputs = false;
-      return;
-    }
 
     if (pressed(UP) && pressed(X)) {
       events::publish("renderer_exit");
@@ -103,6 +101,13 @@ struct Renderer : ui::View {
     auto screen_height = SCREEN->h;
     auto screen_width = SCREEN->w;
 
+    auto spritesheet = Spritesheet::get(spritesheet_kind);
+
+    color_t texture_data[spritesheet->element_size * spritesheet->element_size];
+    buffer_t texture;
+
+    buffer_init(&texture, spritesheet->element_size, spritesheet->element_size, texture_data);
+
     for (int x = 0; x < screen_width; x++) {
       float ray_angle = (State::player.angle - fov/2.0f) + (x / (float)screen_width) * fov;
       Vec2<double> ray_direction = {sinf(ray_angle), cosf(ray_angle)};
@@ -119,13 +124,9 @@ struct Renderer : ui::View {
 
         float ceiling = (screen_height / 2.0f) - screen_height / ray_length;
         float floor = screen_height - ceiling;
-        float wall_height = cap<float>(floor - ceiling, 0, screen_height);
+        float wall_height = cap<float>(floor - ceiling, 0, screen_height);;
 
-#if 0
-        float whole;
-        int texture_x = std::modf(result.tile.sampleX, &whole) * texture->getWidth();
-#endif
-
+#if USE_SHADED_WALL
         int32_t color = scale(
           wall_height,
           {0, (float) screen_height},
@@ -134,6 +135,37 @@ struct Renderer : ui::View {
 
         pen(color, color, color, 0xF);
         vline(x, cap<float>(ceiling, 1, screen_height), wall_height);
+#else
+        int32_t mx = result.tile.hit_position.x, my = result.tile.hit_position.y;
+
+        if (result.tile.side == SOUTH) {
+          my -= 1;
+        }
+
+        if (result.tile.side == EAST) {
+          mx -= 1;
+        }
+
+        spritesheet->select(&texture, State::map.get(mx, my).type - 1);
+
+        float whole;
+        int texture_x = std::modf(result.tile.sample_x, &whole) * spritesheet->element_size;
+
+        // if (result.tile.side == SOUTH || result.tile.side == WEST) {
+          // texture_x = spritesheet->element_size - texture_x - 1;
+        // }
+
+        blit(&texture,
+          texture_x, 0,
+          1, spritesheet->element_size,
+#if USE_CAP_CEILING
+          x, util::cap<int32_t>(ceiling, 0, screen_height),
+#else
+          x, ceiling,
+#endif
+          1, wall_height
+        );
+#endif
       }
     }
 
@@ -141,7 +173,7 @@ struct Renderer : ui::View {
     pen(0x8, 0x8, 0xF);
     for (int32_t y = 0; y < State::map.size(); ++y) {
       for (int32_t x = 0; x < State::map.size(); ++x) {
-        if (State::map.get(x, y).type == TILE_WALL) {
+        if (State::map.get(x, y).isSolid()) {
           rect(x * MAP_RENDER_SCALE, y * MAP_RENDER_SCALE, MAP_RENDER_SCALE, MAP_RENDER_SCALE);
         }
       }
@@ -152,7 +184,7 @@ struct Renderer : ui::View {
 #endif
   }
 
-  private:
+private:
   DDAResult cast_ray(Vec2<double> src, Vec2<double> direction) {
     DDAResult result;
 
@@ -198,7 +230,7 @@ struct Renderer : ui::View {
       Vec2<double> ray_distance = {(float)map_check.x - src.x, (float)map_check.y - src.y};
       distance = sqrt(ray_distance.x * ray_distance.x + ray_distance.y * ray_distance.y);
 
-      if (State::map.get(map_check).type == TILE_WALL) {
+      if (State::map.get(map_check).isSolid()) {
         hit_tile = map_check;
 
         result.hit_wall = true;
