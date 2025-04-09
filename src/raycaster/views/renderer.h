@@ -37,8 +37,6 @@ struct Renderer : ui::View {
   float depth = 30.0f;
   float step  = 0.01f;
 
-  SpritesheetKind spritesheet_kind = SpritesheetKind::WOLF3D;
-
   Renderer() {}
   ~Renderer() override = default;
 
@@ -101,7 +99,7 @@ struct Renderer : ui::View {
     auto screen_height = SCREEN->h;
     auto screen_width = SCREEN->w;
 
-    auto spritesheet = Spritesheet::get(spritesheet_kind);
+    auto spritesheet = Spritesheet::get(State::spritesheet);
 
     color_t texture_data[spritesheet->element_size * spritesheet->element_size];
     buffer_t texture;

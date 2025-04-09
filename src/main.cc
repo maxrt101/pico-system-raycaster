@@ -10,9 +10,10 @@ std::unordered_map<Event, std::vector<EventSubscriber>> events::subscribers;
 // Debug
 std::string events::last_published;
 
-Option  State::options[Option::OPTIONS_MAX];
-Player  State::player;
-Map     State::map;
+Option          State::options[Option::OPTIONS_MAX];
+Player          State::player;
+Map             State::map;
+SpritesheetKind State::spritesheet = SpritesheetKind::WOLF3D;
 
 std::unordered_map<SpritesheetKind, Spritesheet> Spritesheet::spritesheets = {
   {SpritesheetKind::WOLF3D, Spritesheet(wolf3d_spritesheet_16x16, 6, 16)}
