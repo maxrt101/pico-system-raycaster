@@ -5,8 +5,10 @@
 #include "raycaster/state.h"
 
 std::unordered_map<Event, std::vector<EventSubscriber>> events::subscribers;
-// Debug
+
+#if SAVE_LAST_EVENT
 std::string events::last_published;
+#endif
 
 Option            State::options[Option::OPTIONS_MAX];
 Player            State::player;
