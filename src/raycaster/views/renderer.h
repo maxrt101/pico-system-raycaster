@@ -7,7 +7,6 @@
 
 #define MAP_TILE_SCALE          (SCREEN_SIZE / MAP_SIZE)
 #define USE_SHADED_WALL         0
-#define USE_CAP_CEILING         0
 #define USE_SAMPLE_MAP          1
 #define USE_2D_MAP_RENDER       1
 #define MAP_RENDER_SCALE        1
@@ -122,9 +121,11 @@ struct Renderer : ui::View {
 
         float ceiling = (screen_height / 2.0f) - screen_height / ray_length;
         float floor = screen_height - ceiling;
-        float wall_height = cap<float>(floor - ceiling, 0, screen_height);;
+        float wall_height = floor - ceiling;
 
 #if USE_SHADED_WALL
+        wall_height = cap<float>(floor - ceiling, 0, screen_height);
+
         int32_t color = scale(
           wall_height,
           {0, (float) screen_height},
@@ -136,31 +137,23 @@ struct Renderer : ui::View {
 #else
         int32_t mx = result.tile.hit_position.x, my = result.tile.hit_position.y;
 
-        if (result.tile.side == SOUTH) {
-          my -= 1;
-        }
-
-        if (result.tile.side == EAST) {
-          mx -= 1;
-        }
+        // DDA Corrections (tile hit coords are invalid if for these sides)
+        if (result.tile.side == SOUTH) my -= 1;
+        if (result.tile.side == EAST)  mx -= 1;
 
         spritesheet->select(&texture, State::map.get(mx, my).type - 1);
 
         float whole;
         int texture_x = std::modf(result.tile.sample_x, &whole) * spritesheet->element_size;
 
-        // if (result.tile.side == SOUTH || result.tile.side == WEST) {
-          // texture_x = spritesheet->element_size - texture_x - 1;
-        // }
+        if (result.tile.side == SOUTH || result.tile.side == WEST) {
+          texture_x = spritesheet->element_size - texture_x - 1;
+        }
 
         blit(&texture,
           texture_x, 0,
           1, spritesheet->element_size,
-#if USE_CAP_CEILING
-          x, util::cap<int32_t>(ceiling, 0, screen_height),
-#else
           x, ceiling,
-#endif
           1, wall_height
         );
 #endif
