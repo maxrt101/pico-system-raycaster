@@ -9,6 +9,8 @@ struct Option {
     SHOW_FPS     = 1,
     SHOW_BATTERY = 2,
     BACKLIGHT    = 3,
+    MOVE_SPEED   = 4,
+    ROT_SPEED    = 5,
 
     OPTIONS_MAX,
   };
@@ -52,6 +54,10 @@ struct Option {
         return "Show Battery";
       case BACKLIGHT:
         return "Backlight";
+      case MOVE_SPEED:
+        return "Move Speed";
+      case ROT_SPEED:
+        return "Rot Speed";
       default:
         return "?";
     }

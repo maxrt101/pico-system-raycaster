@@ -11,7 +11,7 @@
 
 struct Map {
   struct Tile {
-    uint8_t type;
+    int8_t type;
 
     Tile() : type(TILE_EMPTY) {}
     Tile(uint8_t type) : type(type) {}

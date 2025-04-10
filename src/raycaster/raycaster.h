@@ -79,7 +79,7 @@ struct Raycaster : ui::View {
     stack.push("renderer", &views.renderer);
     stack.push("map_edit", &views.map_edit);
 
-    last_backlight = State::options[Option::BACKLIGHT].value.range.value;
+    last_backlight = State::getOptRangeVal(Option::BACKLIGHT);
   }
 
   void update(uint32_t tick) {
@@ -87,9 +87,19 @@ struct Raycaster : ui::View {
 
     stack.update(tick);
 
-    if (last_backlight != State::options[Option::BACKLIGHT].value.range.value) {
-      last_backlight = State::options[Option::BACKLIGHT].value.range.value;
-      backlight(last_backlight);
+    if (views.options.activated) {
+      if (last_backlight != State::getOptRangeVal(Option::BACKLIGHT)) {
+        last_backlight = State::getOptRangeVal(Option::BACKLIGHT);
+        backlight(last_backlight);
+      }
+
+      if (State::getOptRangeVal(Option::MOVE_SPEED) / OPT_MOVE_SPEED_SCALE != State::player.movement_speed) {
+        State::player.movement_speed = State::getOptRangeVal(Option::MOVE_SPEED) / OPT_MOVE_SPEED_SCALE;
+      }
+
+      if (State::getOptRangeVal(Option::ROT_SPEED) / OPT_ROT_SPEED_SCALE != State::player.rotation_speed) {
+        State::player.rotation_speed = State::getOptRangeVal(Option::ROT_SPEED) / OPT_ROT_SPEED_SCALE;
+      }
     }
   }
 
