@@ -74,7 +74,7 @@ struct Renderer : ui::View {
       State::player.position.x += sinf(State::player.angle) * State::player.movement_speed; //* frameTime;
       State::player.position.y += cosf(State::player.angle) * State::player.movement_speed; //* frameTime;
 
-      if (State::map.get((int) State::player.position.x, (int) State::player.position.y).type == TILE_WALL) {
+      if (State::map.get((int) State::player.position.x, (int) State::player.position.y).isSolid()) {
         State::player.position.x -= sinf(State::player.angle) * State::player.movement_speed; //* frameTime;
         State::player.position.y -= cosf(State::player.angle) * State::player.movement_speed; //* frameTime;
       }
@@ -84,7 +84,7 @@ struct Renderer : ui::View {
       State::player.position.x -= sinf(State::player.angle) * State::player.movement_speed; //* frameTime;
       State::player.position.y -= cosf(State::player.angle) * State::player.movement_speed; //* frameTime;
 
-      if (State::map.get((int) State::player.position.x, (int) State::player.position.y).type == TILE_WALL) {
+      if (State::map.get((int) State::player.position.x, (int) State::player.position.y).isSolid()) {
         State::player.position.x += sinf(State::player.angle) * State::player.movement_speed; //* frameTime;
         State::player.position.y += cosf(State::player.angle) * State::player.movement_speed; //* frameTime;
       }
