@@ -49,12 +49,18 @@ set(PROJECT_SOURCES
     ${PROJECT_PATH}/src/raycaster/views/map_edit.h
     ${PROJECT_PATH}/src/main.cc
     ${PROJECT_PATH}/src/assets/wolf3d_walls_spritesheet_16x16.h
+    ${PROJECT_PATH}/src/assets/assets.cc
 )
 
 # Create the output target
 picosystem_executable(
   ${PROJECT_NAME}
   ${PROJECT_SOURCES}
+)
+
+target_compile_definitions(${PROJECT_NAME}
+    PUBLIC IMPORTED_SPRITESHEETS=WOLF3D
+    PUBLIC DEFAULT_SPRITESHEET=Spritesheet::Kind::WOLF3D
 )
 
 # Instruct linker to print memory usage in regions

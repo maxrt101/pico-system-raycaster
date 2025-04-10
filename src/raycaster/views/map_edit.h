@@ -71,10 +71,7 @@ struct MapEdit : ui::View {
     using namespace picosystem;
     using namespace util;
 
-    int32_t scale = util::SCREEN_SIZE / State::map.size();
-
-    auto screen_height = SCREEN->h;
-    auto screen_width = SCREEN->w;
+    int32_t scale = SCREEN_SIZE / State::map.size();
 
     auto spritesheet = Spritesheet::get(State::spritesheet);
 

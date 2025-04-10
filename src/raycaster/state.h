@@ -9,10 +9,10 @@
 #define OPT_ROT_SPEED_SCALE  100.0f
 
 struct State {
-  static Option          options[Option::OPTIONS_MAX];
-  static Player          player;
-  static Map             map;
-  static SpritesheetKind spritesheet;
+  static Option            options[Option::OPTIONS_MAX];
+  static Player            player;
+  static Map               map;
+  static Spritesheet::Kind spritesheet;
 
   static bool getOptBool(uint8_t opt) {
     return options[opt].value.boolean;

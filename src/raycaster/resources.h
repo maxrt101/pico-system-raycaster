@@ -3,14 +3,18 @@
 #include "picosystem.hpp"
 #include "util/util.h"
 
-enum class SpritesheetKind {
-  NONE,
-  WOLF3D
-};
+#ifndef IMPORTED_SPRITESHEETS
+#define IMPORTED_SPRITESHEETS
+#endif
 
 struct Resource {};
 
 struct Spritesheet : Resource {
+  enum class Kind {
+    NONE = 0,
+    IMPORTED_SPRITESHEETS
+  };
+
   picosystem::buffer_t buffer;
   int32_t size;
   int32_t element_size;
@@ -38,10 +42,10 @@ struct Spritesheet : Resource {
     target();
   }
 
-  static Spritesheet * get(SpritesheetKind kind) {
+  static Spritesheet * get(Kind kind) {
     return &spritesheets[kind];
   }
 
-  static std::unordered_map<SpritesheetKind, Spritesheet> spritesheets;
+  static std::unordered_map<Kind, Spritesheet> spritesheets;
 };
 
