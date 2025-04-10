@@ -4,8 +4,8 @@
 #include <cstdint>
 #include <vector>
 
-#define TILE_EMPTY              0
-#define TILE_WALL               1
+#define TILE_EMPTY 0
+#define TILE_WALL  1
 
 #define USE_SAMPLE_MAP 1
 
@@ -47,10 +47,6 @@ struct Map {
   Map(int32_t size) : side_size(size) {
     tiles.reserve(size * size);
   }
-
-//  Map(Tile * tiles) {
-//    memcpy(this->tiles, tiles, sizeof(Tile) * N * N);
-//  }
 
   int32_t size() const {
     return side_size;

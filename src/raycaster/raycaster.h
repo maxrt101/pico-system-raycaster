@@ -21,47 +21,47 @@ struct Raycaster : ui::View {
 
   Raycaster() {
     events::subscribe("options_enter", [this](void * p) {
-      this->views.main_menu.activated = false;
-      this->views.options.activated = true;
-      this->views.options.init();
+      views.main_menu.activated = false;
+      views.options.activated = true;
+      views.options.init();
     });
 
     events::subscribe("options_exit", [this](void * p) {
-      this->views.main_menu.activated = true;
-      this->views.options.activated = false;
-      this->views.main_menu.init();
+      views.main_menu.activated = true;
+      views.options.activated = false;
+      views.main_menu.init();
     });
 
     events::subscribe("map_edit_enter", [this](void * p) {
       map_edit_enter_payload = p;
-      this->views.main_menu.activated = false;
-      this->views.renderer.activated = false;
-      this->views.map_edit.activated = true;
-      this->views.map_edit.init();
+      views.main_menu.activated = false;
+      views.renderer.activated = false;
+      views.map_edit.activated = true;
+      views.map_edit.init();
     });
 
     events::subscribe("map_edit_exit", [this](void * p) {
-      this->views.map_edit.activated = false;
+      views.map_edit.activated = false;
 
       if (map_edit_enter_payload == &views.renderer) {
-        this->views.renderer.activated = true;
-        this->views.renderer.init();
+        views.renderer.activated = true;
+        views.renderer.init();
       } else {
-        this->views.main_menu.activated = true;
-        this->views.main_menu.init();
+        views.main_menu.activated = true;
+        views.main_menu.init();
       }
     });
 
     events::subscribe("renderer_enter", [this](void * p) {
-      this->views.main_menu.activated = false;
-      this->views.renderer.activated = true;
-      this->views.renderer.init();
+      views.main_menu.activated = false;
+      views.renderer.activated = true;
+      views.renderer.init();
     });
 
     events::subscribe("renderer_exit", [this](void * p) {
-      this->views.main_menu.activated = true;
-      this->views.renderer.activated = false;
-      this->views.main_menu.init();
+      views.main_menu.activated = true;
+      views.renderer.activated = false;
+      views.main_menu.init();
     });
 
     events::subscribe("reset_to_dfu", [this](void * p) {
