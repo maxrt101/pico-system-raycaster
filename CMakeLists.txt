@@ -31,12 +31,12 @@ set(PROJECT_SOURCES
     ${PROJECT_PATH}/src/util/util.h
     ${PROJECT_PATH}/src/util/math.h
     ${PROJECT_PATH}/src/util/vec2.h
-#    ${PROJECT_PATH}/src/util/vec3.h
     ${PROJECT_PATH}/src/util/bitmap.h
     ${PROJECT_PATH}/src/util/events.h
     ${PROJECT_PATH}/src/util/timeout.h
     ${PROJECT_PATH}/src/ui/view.h
     ${PROJECT_PATH}/src/ui/menu.h
+    ${PROJECT_PATH}/src/ui/alert.h
     ${PROJECT_PATH}/src/raycaster/map.h
     ${PROJECT_PATH}/src/raycaster/player.h
     ${PROJECT_PATH}/src/raycaster/option.h
