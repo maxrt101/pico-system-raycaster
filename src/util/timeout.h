@@ -23,6 +23,18 @@ struct Timeout {
   void restart() {
     start = picosystem::time();
   }
+
+  uint32_t passed() const {
+    return picosystem::time() - start;
+  }
+
+  uint32_t left() const {
+    if (start + duration < picosystem::time()) {
+      return 0;
+    }
+
+    return start + duration - picosystem::time();
+  }
 };
 
 }
